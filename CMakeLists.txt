@@ -58,8 +58,8 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall   -O3")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall   -O3")
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -march=native")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 
@@ -171,19 +171,26 @@ target_include_directories(${LIBRARY_NAME} PUBLIC
 )
 
 target_link_libraries(${LIBRARY_NAME}
-     PRIVATE
+     PUBLIC
+        ORB_SLAM3_DBoW2
+        ORB_SLAM3_g2o
         ${OpenCV_LIBS}
         ${EIGEN3_LIBS}
         ${Pangolin_LIBRARIES}
-        DBoW2
-        g2o
         -lboost_serialization
         -lcrypto
+        -lGL
+        -lGLU
+        -lGLEW
 )
 
 add_definitions(
         -Wno-deprecated-declarations
 )
+
+## Compile Orb vocabulary
+add_executable(bin_vocabulary Vocabulary/bin_vocabulary.cc)
+target_link_libraries(bin_vocabulary ${LIBRARY_NAME})
 
 ################################################################################
 # Create Targets
@@ -227,3 +234,73 @@ install(
         DESTINATION ${ORB_SLAM3_CMAKE_CONFIG_INSTALL_DIR}
         FILE ORB_SLAM3Config.cmake
 )
+
+################################################################################
+# Build Examples
+################################################################################
+
+if (BUILD_EXAMPLES)
+   # Build examples
+
+   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/RGB-D)
+   add_executable(rgbd_tum
+           Examples/RGB-D/rgbd_tum.cc)
+   target_link_libraries(rgbd_tum ${PROJECT_NAME})
+
+
+   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo)
+
+   add_executable(stereo_kitti
+           Examples/Stereo/stereo_kitti.cc)
+   target_link_libraries(stereo_kitti ${PROJECT_NAME})
+
+   add_executable(stereo_euroc
+           Examples/Stereo/stereo_euroc.cc)
+   target_link_libraries(stereo_euroc ${PROJECT_NAME})
+
+   add_executable(stereo_tum_vi
+           Examples/Stereo/stereo_tum_vi.cc)
+   target_link_libraries(stereo_tum_vi ${PROJECT_NAME})
+
+
+   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular)
+
+   add_executable(mono_tum
+           Examples/Monocular/mono_tum.cc)
+   target_link_libraries(mono_tum ${PROJECT_NAME})
+
+   add_executable(mono_kitti
+           Examples/Monocular/mono_kitti.cc)
+   target_link_libraries(mono_kitti ${PROJECT_NAME})
+
+   add_executable(mono_euroc
+           Examples/Monocular/mono_euroc.cc)
+   target_link_libraries(mono_euroc ${PROJECT_NAME})
+
+   add_executable(mono_tum_vi
+           Examples/Monocular/mono_tum_vi.cc)
+   target_link_libraries(mono_tum_vi ${PROJECT_NAME})
+
+
+   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular-Inertial)
+
+   add_executable(mono_inertial_euroc
+           Examples/Monocular-Inertial/mono_inertial_euroc.cc)
+   target_link_libraries(mono_inertial_euroc ${PROJECT_NAME})
+
+   add_executable(mono_inertial_tum_vi
+           Examples/Monocular-Inertial/mono_inertial_tum_vi.cc)
+   target_link_libraries(mono_inertial_tum_vi ${PROJECT_NAME})
+
+
+   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo-Inertial)
+
+   add_executable(stereo_inertial_euroc
+           Examples/Stereo-Inertial/stereo_inertial_euroc.cc)
+   target_link_libraries(stereo_inertial_euroc ${PROJECT_NAME})
+
+
+   add_executable(stereo_inertial_tum_vi
+           Examples/Stereo-Inertial/stereo_inertial_tum_vi.cc)
+   target_link_libraries(stereo_inertial_tum_vi ${PROJECT_NAME})
+endif()

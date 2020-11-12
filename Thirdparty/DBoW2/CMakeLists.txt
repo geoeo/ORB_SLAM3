@@ -1,13 +1,23 @@
 cmake_minimum_required(VERSION 3.9)
 
-set(LIBRARY_NAME DBoW2)
+set(LIBRARY_NAME ORB_SLAM3_DBoW2)
+
+if(CMAKE_BUILD_TYPE)
+   message(STATUS "Build type specified as ${CMAKE_BUILD_TYPE}")
+else()
+   message(STATUS "Build type not specified, using Release")
+   set(CMAKE_BUILD_TYPE Release)
+   set(IS_DEBUG OFF)
+endif()
+
+set(CMAKE_CXX_STANDARD 11)
 
 ################################################################################
 # Flags
 ################################################################################
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall  -O3 -march=native ")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall  -O3 -march=native")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall  -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall  -O3")
 
 set(HDRS_DBOW2
   DBoW2/BowVector.h
@@ -53,8 +63,8 @@ target_link_libraries(${LIBRARY_NAME}
 target_include_directories(${LIBRARY_NAME} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/DBoW2> # for headers when building
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/DUtils> # for headers when building
-        $<INSTALL_INTERFACE:${ORB_SLAM3_INC_INSTALL_DIR}/DBoW2> # for client in install mode
-        $<INSTALL_INTERFACE:${ORB_SLAM3_INC_INSTALL_DIR}/DUtils> # for client in install mode
+        $<INSTALL_INTERFACE:${ORB_SLAM3_INC_INSTALL_DIR}/Thirdparty/DBoW2/DBoW2> # for client in install mode
+        $<INSTALL_INTERFACE:${ORB_SLAM3_INC_INSTALL_DIR}/Thirdparty/DBoW2/DUtils> # for client in install mode
 )
 
 set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME "${LIBRARY_NAME}-${ORB_SLAM3_VERSION}")

@@ -1,6 +1,16 @@
 cmake_minimum_required(VERSION 3.9)
 
-set(LIBRARY_NAME g2o)
+set(LIBRARY_NAME ORB_SLAM3_g2o)
+
+if(CMAKE_BUILD_TYPE)
+  message(STATUS "Build type specified as ${CMAKE_BUILD_TYPE}")
+else()
+  message(STATUS "Build type not specified, using Release")
+  set(CMAKE_BUILD_TYPE Release)
+  set(IS_DEBUG OFF)
+endif()
+
+set(CMAKE_CXX_STANDARD 11)
 
 ################################################################################
 # Flags
@@ -36,8 +46,8 @@ if(OPENMP_FOUND AND G2O_USE_OPENMP)
 endif(OPENMP_FOUND AND G2O_USE_OPENMP)
 
 # Compiler specific options for gcc
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -march=native")
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -march=native")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
 
 # activate warnings !!!
 set(g2o_C_FLAGS "${g2o_C_FLAGS} -Wall -W")
@@ -58,14 +68,14 @@ endif(EIGEN3_FOUND)
 
 # Generate config.h
 set(G2O_CXX_COMPILER "${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER}")
-configure_file(config.h.in ${g2o_SOURCE_DIR}/config.h)
+configure_file(config.h.in g2o/config.h)
 
 # Set up the top-level include directories
 include_directories(
-  ${g2o_SOURCE_DIR}/core
-  ${g2o_SOURCE_DIR}/types
-  ${g2o_SOURCE_DIR}/stuff
-  ${g2o_SOURCE_DIR}/solvers
+  g2o/core
+  g2o/types
+  g2o/stuff
+  g2o/solvers
   ${G2O_EIGEN3_INCLUDE}
 )
 
@@ -164,14 +174,11 @@ target_include_directories(${LIBRARY_NAME} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/g2o/types> # for headers when building
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/g2o/solvers> # for headers when building
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/g2o/stuff> # for headers when building
-        $<INSTALL_INTERFACE:${ORB_SLAM3_INC_INSTALL_DIR}/g2o/core> # for client in install mode
-        $<INSTALL_INTERFACE:${ORB_SLAM3_INC_INSTALL_DIR}/g2o/types> # for client in install mode
-        $<INSTALL_INTERFACE:${ORB_SLAM3_INC_INSTALL_DIR}/g2o/solvers> # for client in install mode
-        $<INSTALL_INTERFACE:${ORB_SLAM3_INC_INSTALL_DIR}/g2o/stuff> # for client in install mode
+        $<INSTALL_INTERFACE:${ORB_SLAM3_INC_INSTALL_DIR}/Thirdparty/g2o/g2o/core> # for client in install mode
+        $<INSTALL_INTERFACE:${ORB_SLAM3_INC_INSTALL_DIR}/Thirdparty/g2o/g2o/types> # for client in install mode
+        $<INSTALL_INTERFACE:${ORB_SLAM3_INC_INSTALL_DIR}/Thirdparty/g2o/g2o/solvers> # for client in install mode
+        $<INSTALL_INTERFACE:${ORB_SLAM3_INC_INSTALL_DIR}/Thirdparty/g2o/g2o/stuff> # for client in install mode
         )
-
-#target_link_libraries(${LIBRARY_NAME}
-#        )
 
 set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME "${LIBRARY_NAME}-${ORB_SLAM3_VERSION}")
 

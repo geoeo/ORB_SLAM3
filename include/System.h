@@ -23,8 +23,8 @@
 //#define SAVE_TIMES
 
 #include <unistd.h>
-#include<stdio.h>
-#include<stdlib.h>
+#include<cstdio>
+#include<cstdlib>
 #include<string>
 #include<thread>
 #include<opencv2/core/core.hpp>
@@ -77,6 +77,9 @@ class Atlas;
 class Tracking;
 class LocalMapping;
 class LoopClosing;
+class CameraParameters;
+class ImuParameters;
+class OrbParameters;
 
 class System
 {
@@ -98,8 +101,12 @@ public:
 
 public:
 
+    // Headless setup
+    System(const std::string &strVocFile, const CameraParameters &cam, const ImuParameters &imu, const OrbParameters &orb, const eSensor sensor);
+
+
     // Initialize the SLAM system. It launches the Local Mapping, Loop Closing and Viewer threads.
-    System(const string &strVocFile, const string &strSettingsFile, const eSensor sensor, const bool bUseViewer = true, const int initFr = 0, const string &strSequence = std::string(), const string &strLoadingFile = std::string());
+    System(const std::string &strVocFile, const std::string &strSettingsFile, const eSensor sensor, const bool bUseViewer = true, const int initFr = 0, const string &strSequence = std::string(), const string &strLoadingFile = std::string());
 
     // Proccess the given stereo frame. Images must be synchronized and rectified.
     // Input images: RGB (CV_8UC3) or grayscale (CV_8U). RGB is converted to grayscale.
@@ -176,6 +183,9 @@ public:
     bool isFinished();
 
     void ChangeDataset();
+
+    int GetLastKeyFrameId();
+    cv::Mat DrawTrackedImage();
 
     //void SaveAtlas(int type);
 

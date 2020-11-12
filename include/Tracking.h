@@ -53,10 +53,43 @@ class LocalMapping;
 class LoopClosing;
 class System;
 
-class Tracking
-{  
+struct CameraParameters
+{
+  bool isRGB;
+  float fps;
+  int width;
+  int height;
+  cv::Mat K;
+  cv::Mat distCoeffs;
+};
 
+struct ImuParameters
+{
+  cv::Mat Tbc;
+  float noiseGyro;
+  float noiseAccel;
+  float gyroWalk;
+  float accelWalk;
+  float freq;
+};
+
+struct OrbParameters
+{
+  int nFeatures;
+  float scaleFactor;
+  int nLevels;
+  int iniThFast;
+  int minThFast;
+};
+
+class Tracking
+{
 public:
+    friend System;
+public:
+    Tracking(System* pSys, ORBVocabulary* pVoc, FrameDrawer* pFrameDrawer, MapDrawer* pMapDrawer, Atlas* pAtlas,
+             KeyFrameDatabase* pKFDB, const CameraParameters &cam, const ImuParameters &imu, const OrbParameters &orb, const int sensor);
+
     Tracking(System* pSys, ORBVocabulary* pVoc, FrameDrawer* pFrameDrawer, MapDrawer* pMapDrawer, Atlas* pAtlas,
              KeyFrameDatabase* pKFDB, const string &strSettingPath, const int sensor, const string &_nameSeq=std::string());
 
