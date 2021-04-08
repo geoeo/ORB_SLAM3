@@ -26,6 +26,8 @@
 #include<thread>
 #include <include/CameraModels/Pinhole.h>
 
+#include "loguru.h"
+
 namespace ORB_SLAM3
 {
 
@@ -44,6 +46,7 @@ Initializer::Initializer(const Frame &ReferenceFrame, float sigma, int iteration
 bool Initializer::Initialize(const Frame &CurrentFrame, const vector<int> &vMatches12, cv::Mat &R21, cv::Mat &t21,
                              vector<cv::Point3f> &vP3D, vector<bool> &vbTriangulated)
 {
+    LOG_F(WARNING, "Trying to initialize...");
 
     mvKeys2 = CurrentFrame.mvKeysUn;
 
@@ -528,6 +531,7 @@ bool Initializer::ReconstructF(vector<bool> &vbMatchesInliers, cv::Mat &F21, cv:
     // If there is not a clear winner or not enough triangulated points reject initialization
     if(maxGood<nMinGood || nsimilar>1)
     {
+	std::cout << "Initialization rejected. No clear winner!" << std::endl;
         return false;
     }
 

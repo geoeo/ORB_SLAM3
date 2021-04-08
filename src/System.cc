@@ -25,6 +25,7 @@
 #include <iomanip>
 #include <openssl/md5.h>
 #include <boost/serialization/base_object.hpp>
+#include "loguru.h"
 
 namespace ORB_SLAM3
 {
@@ -449,6 +450,7 @@ cv::Mat System::TrackMonocular(const cv::Mat &im, const double &timestamp, const
     if(mSensor!=MONOCULAR && mSensor!=IMU_MONOCULAR)
     {
         cerr << "ERROR: you called TrackMonocular but input sensor was not set to Monocular nor Monocular-Inertial." << endl;
+        LOG_F(WARNING, "ERROR: you called TrackMonocular but input sensor was not set to Monocular nor Monocular-Inertial.");
         exit(-1);
     }
 
@@ -487,7 +489,7 @@ cv::Mat System::TrackMonocular(const cv::Mat &im, const double &timestamp, const
         }
         else if(mbResetActiveMap)
         {
-            cout << "SYSTEM-> Reseting active map in monocular case" << endl;
+            LOG_F(INFO, "SYSTEM-> Reseting active map in monocular case");
             mpTracker->ResetActiveMap();
             mbResetActiveMap = false;
         }

@@ -29,6 +29,7 @@
 #include"G2oTypes.h"
 #include"Optimizer.h"
 #include"PnPsolver.h"
+#include"loguru.h"
 
 #include<iostream>
 
@@ -1528,7 +1529,7 @@ void Tracking::Track()
     {
         if(mLastFrame.mTimeStamp>mCurrentFrame.mTimeStamp)
         {
-            cerr << "ERROR: Frame with a timestamp older than previous frame detected!" << endl;
+            LOG_F(WARNING, "ERROR: Frame with a timestamp older than previous frame detected!");
             unique_lock<mutex> lock(mMutexImuQueue);
             mlQueueImuData.clear();
             CreateMapInAtlas();
@@ -2129,7 +2130,7 @@ void Tracking::StereoInitialization()
 
 void Tracking::MonocularInitialization()
 {
-
+    LOG_F(INFO, "Trying monocular intialization...");
     if(!mpInitializer)
     {
         // Set Reference Frame
