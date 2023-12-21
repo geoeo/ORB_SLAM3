@@ -1,4 +1,6 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.14)
+
+project(g2o)
 
 set(LIBRARY_NAME ORB_SLAM3_g2o)
 
@@ -68,7 +70,7 @@ endif(EIGEN3_FOUND)
 
 # Generate config.h
 set(G2O_CXX_COMPILER "${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER}")
-configure_file(config.h.in g2o/config.h)
+configure_file(config.h.in "${PROJECT_BINARY_DIR}/g2o/config.h")
 
 # Set up the top-level include directories
 include_directories(
