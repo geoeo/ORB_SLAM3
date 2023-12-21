@@ -28,6 +28,7 @@
 
 #include <math.h>
 
+#include "Thirdparty/g2o/g2o/core/eigen_types.h"
 #include "Thirdparty/g2o/g2o/types/types_seven_dof_expmap.h"
 #include "Thirdparty/g2o/g2o/core/sparse_block_matrix.h"
 #include "Thirdparty/g2o/g2o/core/block_solver.h"
