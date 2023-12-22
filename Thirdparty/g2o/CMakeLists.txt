@@ -202,6 +202,6 @@ install(
 )
 
 install(
-        FILES config.h config.h.in
+        FILES ${PROJECT_BINARY_DIR}/g2o/config.h config.h.in
         DESTINATION ${ORB_SLAM3_INC_INSTALL_DIR}/Thirdparty/g2o
 )
