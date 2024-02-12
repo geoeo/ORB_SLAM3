@@ -510,7 +510,7 @@ void Optimizer::FullInertialBA(Map *pMap, int its, const bool bFixLocal, const l
             continue;
         }
 
-        if(pKFi->mPrevKF && pKFi->mnId<=maxKFid)
+        if(pKFi->mPrevKF && pKFi->mnId<=maxKFid && pKFi->mpImuPreintegrated)
         {
             if(pKFi->isBad() || pKFi->mPrevKF->mnId>maxKFid)
                 continue;
