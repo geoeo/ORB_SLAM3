@@ -5304,8 +5304,6 @@ void Optimizer::InertialOptimization(Map *pMap, Eigen::Matrix3d &Rwg, double &sc
 
     cv::Mat cvbg = Converter::toCvMat(bg);
 
-    if(!pKFi->mpImuPreintegrated)
-        return;
     //Keyframes velocities and biases
     std::cout << "update Keyframes velocities and biases" << std::endl;
 
@@ -5313,7 +5311,7 @@ void Optimizer::InertialOptimization(Map *pMap, Eigen::Matrix3d &Rwg, double &sc
     for(size_t i=0; i<N; i++)
     {
         KeyFrame* pKFi = vpKFs[i];
-        if(pKFi->mnId>maxKFid)
+        if(pKFi->mnId>maxKFid || !pKFi->mpImuPreintegrated)
             continue;
 
         VertexVelocity* VV = static_cast<VertexVelocity*>(optimizer.vertex(maxKFid+(pKFi->mnId)+1));
